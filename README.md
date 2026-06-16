@@ -93,4 +93,4 @@ E-mail: gabriel.santosm@sempreceub.com
 Quando um desenvolvedor sênior ou tech lead abrir o seu perfil, ele não vai ver apenas "um script que roda". Ele vai ver termos como **OOM (Out Of Memory)**, **I/O Bottleneck**, **High Watermark** e **Graceful Shutdown**. É exatamente esse vocabulário que separa um programador júnior de um profissional que entende de arquitetura! Salva ele no seu projeto, faz o `git add README.md`, `git commit` e manda pro GitHub. Faltará apenas o vídeo para fechar com chave de ouro!
 separa um programador júnior de um profissional que entende de arquitetura!
 
-Salva ele no seu projeto, faz o `git add README.md`, `git commit` e manda pro GitHub. Faltará
+Salva ele no seu projeto, faz o `git add README.md`, `git commit` e manda pro GitHub. 
