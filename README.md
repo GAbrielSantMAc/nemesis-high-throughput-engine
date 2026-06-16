@@ -39,3 +39,58 @@ Para contornar o gargalo de escrita em disco, o servidor utiliza uma estratégia
 ---
 
 ## 🎨 O Fluxo de Dados (Data Pipeline)
+
+[ Sensor IoT ] ──(Rajada de Mensagens TCP)──> [ Socket Buffer (OS) ]
+│
+┌─────────────────── Servidor Nemesis ───────────────┴──────────────────┐
+│                                                                       │
+│  [ Socket Reader ] ──> Se Buffer > Max ──> Ativa [⚠️ Backpressure]     │
+│            │                                                          │
+│    (Dados Aceitos)                                                    │
+│            ▼                                                          │
+│    [ Fila em Memória RAM ]                                            │
+│            │                                                          │
+│      Se Fila == Lote (Bulk)                                           │
+│            ▼                                                          │
+│    [ 💾 Bulk Flush Engine ] ──(Escrita Única)──> [ Arquivo de Log ]   │
+│                                                                       │
+└───────────────────────────────────────────────────────────────────────┘
+
+
+---
+
+## 🛠️ Detalhes da Implementação Técnica
+
+O projeto foi feito sem nenhuma dependência externa, destacando o domínio de conceitos de baixo nível:
+
+* **Controle de Estado Limpo:** Tratamento nativo de `KeyboardInterrupt` (`Ctrl + C`) garantindo o encerramento seguro (*Graceful Shutdown*), limpando os buffers pendentes antes de fechar as conexões para evitar corrupção de arquivos.
+* **Estrutura de Dados Otimizada:** Uso do `collections.deque` com controle de tamanho máximo, garantindo operações de inserção e remoção com complexidade de tempo constante $O(1)$.
+* **Simulador de Estresse Realista:** O arquivo `sensor_sim.py` não é um gerador comum; ele envia mensagens em loops curtíssimos sem delay propositalmente para simular um ataque de negação de serviço por volume de dados ou um sensor industrial desregulado.
+
+---
+
+## 🚀 Como Executar e Validar
+
+### 1. Clone o repositório:
+```bash
+git clone [https://github.com/GabrielSantMAc/nemesis-high-throughput-engine.git](https://github.com/GabrielSantMAc/nemesis-high-throughput-engine.git)
+cd nemesis-high-throughput-engine
+2. Inicie o Servidor:
+Bash
+python server.py
+3. Inicie o Sensor (Em outro terminal simultaneamente):
+Bash
+python sensor_sim.py
+👨‍💻 Autor
+Desenvolvido por Gabriel Santos (GabrielSantMAc).
+
+LinkedIn: [Seu Link do LinkedIn Aqui]
+
+E-mail: gabriel.santosm@sempreceub.com
+
+
+### Por que esse formato é perfeito?
+Quando um desenvolvedor sênior ou tech lead abrir o seu perfil, ele não vai ver apenas "um script que roda". Ele vai ver termos como **OOM (Out Of Memory)**, **I/O Bottleneck**, **High Watermark** e **Graceful Shutdown**. É exatamente esse vocabulário que separa um programador júnior de um profissional que entende de arquitetura! Salva ele no seu projeto, faz o `git add README.md`, `git commit` e manda pro GitHub. Faltará apenas o vídeo para fechar com chave de ouro!
+separa um programador júnior de um profissional que entende de arquitetura!
+
+Salva ele no seu projeto, faz o `git add README.md`, `git commit` e manda pro GitHub. Faltará
